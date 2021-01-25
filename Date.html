@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>距离春节还剩下...</title>
+	</head>
+	<body>
+		<center>
+			<div>
+				回家时间：<input type="datetime-local" id="backHomeDate" data-format="YYYY-MM-DD HH:mm">
+				<button onclick="fn()">确定</button>
+			</div>
+			<h1 style="color: #BE1A21;"></h1>
+			<h1 id="h1" style="color: #BE1A21;">距离春节还剩下-天-时-分-秒</h1>
+			<h1 id="h2" style="color: #BE1A21;">距离回家还剩下-天-时-分-秒</h1>
+			<img src="duilian2.jpg" />
+		</center>
+	</body>
+	<script type="text/javascript">
+		function getNewYearDate(year){
+			switch(year){
+				case '2021':
+					return '2021-02-12 00:00:00';
+				case '2022':
+					return '2022-02-01 00:00:00';
+				case '2023':
+					return '2023-01-22 00:00:00';
+				case '2024':
+					return '2024-02-10 00:00:00';
+				case '2025':
+					return '2025-01-29 00:00:00';
+				case '2026':
+					return '2026-02-17 00:00:00';
+				default:
+					return '2021-02-12 00:00:00';
+			}
+		}
+		var defaultBackHomeDate = (new Date().getFullYear())+"-02-04 12:05";
+		//当前时间获取
+		var backHomeDate = document.getElementById("backHomeDate");
+		backHomeDate.value = defaultBackHomeDate.replace(' ','T');
+		var oneDay = 1000*60*60*24;
+		var oneHour = 1000*60*60;
+		var oneMinute = 1000*60;
+		var oneSecond = 1000;
+		var newYearTime = getTimeByDate(getNewYearDate(""+(new Date().getFullYear())));
+		var backHomeTime = getTimeByDate(defaultBackHomeDate+':00');
+		var h1 = document.getElementById("h1");
+		var h2 = document.getElementById("h2");
+		test('h1',newYearTime);
+		test('h2',backHomeTime);
+		var setIntervalh1 = setInterval("test('h1',newYearTime)",1000);
+		var setIntervalh2 = setInterval("test('h2',backHomeTime)",1000);
+		var type;
+		function test(id,endTime){
+			var curTime = new Date().getTime();
+			var residueTime = endTime-curTime;
+			var residueDay = Math.floor(residueTime/oneDay);
+			var residueHour = Math.floor(residueTime%oneDay/oneHour);
+			var residueMinute = Math.floor(residueTime%oneDay%oneHour/oneMinute);
+			var residueSecond = Math.floor(residueTime%oneDay%oneHour%oneMinute/oneSecond);
+			type = id=='h2'?'回家':'过年';
+			if(id==='h2'){
+				h2.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+			}else{
+				h1.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+			}
+		}
+		function fn(){
+			clearInterval(setIntervalh1);
+			clearInterval(setIntervalh2);
+			var backHomeDateValue = backHomeDate.value;
+			backHomeTime = getTimeByDate(backHomeDateValue.replace("T"," ")+":00");
+			setIntervalh1 = setInterval("test('h1',newYearTime)",1000);
+			setIntervalh2 = setInterval("test('h2',backHomeTime)",1000);
+		}
+		function getDateString(date){
+			var year = date.getFullYear();
+			var month = (date.getMonth()+1)>9?""+(date.getMonth()+1):"0"+(date.getMonth()+1);
+			var day = date.getDate();
+			var hour = date.getHours();
+			var minute = date.getMinutes()>9?""+date.getMinutes():"0"+date.getMinutes();
+			var str = year+"-"+month+"-"+day+"T"+hour+":"+minute;
+			return str;
+		}
+		function getTimeByDate(t){
+			var d = t.split(" ")[0],
+				h = t.split(" ")[1],
+				date = new Date()
+			date.setYear(d.split("-")[0])
+			date.setMonth(d.split("-")[1] - 1)
+			date.setDate(d.split("-")[2])
+			date.setHours(h.split(":")[0])
+			date.setMinutes(h.split(":")[1])
+			date.setSeconds(h.split(":")[2])
+			return date.getTime();
+		}
+	</script>
+</html>
