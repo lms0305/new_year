@@ -13,15 +13,16 @@
 			<h1 style="color: #BE1A21;"></h1>
 			<h1 id="h1" style="color: #BE1A21;">距离春节还剩下-天-时-分-秒</h1>
 			<h1 id="h2" style="color: #BE1A21;">距离回家还剩下-天-时-分-秒</h1>
+			<h1 id="h3" style="color: #BE1A21;">距离下班还剩下-天-时-分-秒</h1>
 			<img src="duilian2.jpg" />
 		</center>
 	</body>
 	<script type="text/javascript">
 		function getNewYearDate(year){
 			switch(year){
-				case '2021':
+				case '2020':
 					return '2021-02-12 00:00:00';
-				case '2022':
+				case '2021':
 					return '2022-02-01 00:00:00';
 				case '2023':
 					return '2023-01-22 00:00:00';
@@ -35,7 +36,9 @@
 					return '2021-02-12 00:00:00';
 			}
 		}
-		var defaultBackHomeDate = (new Date().getFullYear())+"-02-04 12:05";
+		var date = new Date();
+		var defaultBackHomeDate = (date.getFullYear()+1)+"-01-25 12:05";
+		var defaultOffWorkDate = (date.getFullYear())+"-"+(date.getMonth()+1)+"-"+date.getDate()+" 17:30:00";
 		//当前时间获取
 		var backHomeDate = document.getElementById("backHomeDate");
 		backHomeDate.value = defaultBackHomeDate.replace(' ','T');
@@ -45,12 +48,16 @@
 		var oneSecond = 1000;
 		var newYearTime = getTimeByDate(getNewYearDate(""+(new Date().getFullYear())));
 		var backHomeTime = getTimeByDate(defaultBackHomeDate+':00');
+		var offWorkTime = getTimeByDate(defaultOffWorkDate);
 		var h1 = document.getElementById("h1");
 		var h2 = document.getElementById("h2");
+		var h3 = document.getElementById("h3");
 		test('h1',newYearTime);
 		test('h2',backHomeTime);
+		test('h3',offWorkTime);
 		var setIntervalh1 = setInterval("test('h1',newYearTime)",1000);
 		var setIntervalh2 = setInterval("test('h2',backHomeTime)",1000);
+		var setIntervalh3 = setInterval("test('h3',offWorkTime)",1000);
 		var type;
 		function test(id,endTime){
 			var curTime = new Date().getTime();
@@ -59,11 +66,19 @@
 			var residueHour = Math.floor(residueTime%oneDay/oneHour);
 			var residueMinute = Math.floor(residueTime%oneDay%oneHour/oneMinute);
 			var residueSecond = Math.floor(residueTime%oneDay%oneHour%oneMinute/oneSecond);
-			type = id=='h2'?'回家':'过年';
-			if(id==='h2'){
-				h2.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
-			}else{
-				h1.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+			switch(id){
+				case 'h1':
+					type = '过年';
+					h1.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+					break;
+				case 'h2':
+					type = '回家';
+					h2.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+					break;
+				default:
+					type = '下班';
+					h3.innerHTML = "距离"+type+"还剩下"+residueDay+"天"+residueHour+"时"+residueMinute+"分"+residueSecond+"秒";
+					break;
 			}
 		}
 		function fn(){
